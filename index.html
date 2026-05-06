@@ -1,0 +1,853 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>No Closure Merch</title>
+  <style>
+    :root {
+      --black: #050505;
+      --charcoal: #111;
+      --ash: #d8d1c3;
+      --bone: #f2ead7;
+      --blood: #ffd400;
+      --rust: #7a6500;
+      --muted: #8f8778;
+      --line: rgba(242, 234, 215, 0.16);
+      --shadow: 0 20px 60px rgba(0,0,0,.55);
+    }
+
+    * { box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      background:
+        radial-gradient(circle at 18% 12%, rgba(255, 212, 0, .08), transparent 22rem),
+        linear-gradient(rgba(0,0,0,.78), rgba(0,0,0,.88)),
+        url('bdf966d5b573ab06eb242cbad2b09301.jpg');
+      background-size: auto, auto, 420px;
+      background-attachment: fixed;
+      color: var(--bone);
+      font-family: Arial, Helvetica, sans-serif;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 20;
+      opacity: .14;
+      background-image:
+        repeating-linear-gradient(0deg, transparent 0 2px, rgba(255,255,255,.06) 3px, transparent 4px);
+      mix-blend-mode: overlay;
+    }
+
+    body::after {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: -2;
+      opacity: .04;
+      background:
+        url('65728a48069a0bb75aae0b2cb2ece7f0 (1).jpg');
+      background-size: 520px;
+      transform: rotate(-6deg) scale(1.1);
+      filter: grayscale(1) contrast(1.2);
+    }
+
+    a { color: inherit; text-decoration: none; }
+    button, input, select, textarea { font: inherit; }
+
+    .top-bar {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem clamp(1rem, 4vw, 3rem);
+      border-bottom: 1px solid var(--line);
+      background: rgba(5,5,5,.82);
+      backdrop-filter: blur(16px);
+    }
+
+    .brand {
+      display: flex;
+      gap: .75rem;
+      align-items: center;
+      text-transform: uppercase;
+      font-weight: 950;
+      letter-spacing: -.05em;
+    }
+
+    .brand-logo {
+    width: 50px;
+    height: auto;
+    display: block;
+    }
+
+    .nav {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      text-transform: uppercase;
+      font-size: .78rem;
+      letter-spacing: .12em;
+      color: var(--muted);
+    }
+
+    .nav a:hover { color: var(--bone); }
+
+    .cart-button {
+      border: 1px solid var(--bone);
+      background: var(--bone);
+      color: var(--black);
+      padding: .7rem .95rem;
+      text-transform: uppercase;
+      font-weight: 900;
+      cursor: pointer;
+      transition: transform .12s ease, box-shadow .12s ease;
+    }
+
+    .cart-button:hover {
+      transform: translate(-2px, -2px);
+      box-shadow: 4px 4px 0 var(--blood);
+    }
+
+    .hero {
+    min-height: calc(100vh - 72px);
+    display: grid;
+    place-items: center;
+    text-align: center;
+    padding: 2rem clamp(1rem, 4vw, 4rem);
+    border-bottom: 1px solid var(--line);
+    position: relative;
+    overflow: hidden;
+    }
+
+    .hero-inner {
+    position: relative;
+    z-index: 2;
+    display: grid;
+    place-items: center;
+    max-width: 980px;
+    margin: 0 auto;
+    }
+
+    .hero::before {
+      content: "";
+      position: absolute;
+      inset: -8% -10% -8% auto;
+      width: min(52vw, 760px);
+      background:
+        linear-gradient(rgba(0,0,0,.35), rgba(0,0,0,.55)),
+        url('65728a48069a0bb75aae0b2cb2ece7f0 (1).jpg');
+      background-size: contain;
+      background-repeat: repeat;
+      background-position: center;
+      opacity: .22;
+      transform: rotate(8deg);
+      filter: contrast(1.1) brightness(.85);
+      mask-image: linear-gradient(to left, black 65%, transparent 100%);
+      -webkit-mask-image: linear-gradient(to left, black 65%, transparent 100%);
+      pointer-events: none;
+    }
+
+    .kicker {
+      color: var(--blood);
+      text-transform: uppercase;
+      letter-spacing: .18em;
+      font-size: .82rem;
+      font-weight: 900;
+      margin-bottom: 1rem;
+    }
+
+    .hero-logo {
+      display: block;
+      width: min(520px, 100%);
+      height: auto;
+      filter: drop-shadow(6px 6px 0 rgba(255, 212, 0, .72)) drop-shadow(0 0 28px rgba(242, 234, 215, .12));
+      transform: rotate(-1deg);
+      margin-left: -0.4rem;
+    }
+
+    .hero-copy {
+      max-width: 720px;
+      margin-top: 1.4rem;
+      color: var(--ash);
+      font-size: clamp(1rem, 2vw, 1.22rem);
+      line-height: 1.55;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: .8rem;
+      flex-wrap: wrap;
+      margin-top: 2rem;
+    }
+
+    .btn {
+      border: 1px solid var(--bone);
+      padding: .9rem 1.1rem;
+      text-transform: uppercase;
+      font-weight: 950;
+      cursor: pointer;
+      background: transparent;
+      color: var(--bone);
+      transition: .14s ease;
+    }
+
+    .btn.primary { background: var(--blood); border-color: var(--blood); }
+    .btn:hover { transform: translate(-3px, -3px); box-shadow: 5px 5px 0 var(--bone); }
+
+    .badge-stack {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      gap: 1rem;
+    }
+
+    .badge {
+      border: 1px solid var(--line);
+      background: rgba(17,17,17,.82);
+      padding: 1.2rem;
+      box-shadow: var(--shadow);
+      transform: rotate(var(--r));
+    }
+
+    .badge strong {
+      display: block;
+      text-transform: uppercase;
+      font-size: 1.1rem;
+      letter-spacing: -.03em;
+    }
+
+    .badge span { color: var(--muted); font-size: .9rem; }
+
+    .marquee {
+      overflow: hidden;
+      border-block: 1px solid var(--line);
+      background: var(--bone);
+      color: var(--black);
+      font-weight: 950;
+      text-transform: uppercase;
+      letter-spacing: -.04em;
+      white-space: nowrap;
+    }
+
+    .media-collage {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    max-width: 620px;
+    margin-left: auto;
+    display: grid;
+    gap: 1rem;
+    }
+
+    .media-main {
+    aspect-ratio: 16 / 10;
+    position: relative;
+    overflow: hidden;
+    border: 1px solid rgba(242,234,215,.12);
+    background:
+        linear-gradient(rgba(0,0,0,.2), rgba(0,0,0,.65)),
+        url('video-thumb.jpg');
+    background-size: cover;
+    background-position: center;
+    transform: rotate(1.5deg);
+    box-shadow: var(--shadow);
+    }
+
+    .media-main::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: url('65728a48069a0bb75aae0b2cb2ece7f0 (1).jpg');
+    background-size: 420px;
+    opacity: .18;
+    mix-blend-mode: screen;
+    }
+
+    .media-overlay {
+    position: absolute;
+    inset: auto 0 0 0;
+    padding: 1.4rem;
+    background: linear-gradient(to top, rgba(0,0,0,.92), transparent);
+    z-index: 1;
+    }
+
+    .media-overlay span {
+    display: block;
+    color: var(--blood);
+    text-transform: uppercase;
+    letter-spacing: .18em;
+    font-size: .7rem;
+    margin-bottom: .45rem;
+    font-weight: 900;
+    }
+
+    .media-overlay strong {
+    display: block;
+    color: var(--bone);
+    font-size: clamp(1.8rem, 4vw, 3rem);
+    line-height: .9;
+    letter-spacing: -.08em;
+    }
+
+    .media-strip {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: .8rem;
+    transform: translateX(-2%);
+    }
+
+    .media-thumb {
+    aspect-ratio: 1;
+    background-size: cover;
+    background-position: center;
+    border: 1px solid rgba(242,234,215,.12);
+    filter: grayscale(.6) contrast(1.15);
+    }
+
+    .media-thumb:nth-child(1) { transform: rotate(-3deg); }
+    .media-thumb:nth-child(2) { transform: translateY(10%) rotate(2deg); }
+    .media-thumb:nth-child(3) { transform: rotate(4deg); }
+
+    .floating-note {
+    position: absolute;
+    right: -2%;
+    bottom: -1.2rem;
+    background: var(--blood);
+    color: var(--black);
+    padding: .6rem .8rem;
+    font-size: .72rem;
+    font-weight: 950;
+    text-transform: uppercase;
+    letter-spacing: .14em;
+    transform: rotate(-2deg);
+    }
+
+    .marquee div {
+      display: inline-block;
+      padding: .65rem 0;
+      animation: slide 18s linear infinite;
+    }
+
+    @keyframes slide { to { transform: translateX(-50%); } }
+
+    section {
+      padding: clamp(3rem, 7vw, 6rem) clamp(1rem, 4vw, 4rem);
+    }
+
+    .section-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 1rem;
+      align-items: end;
+      margin-bottom: 1.5rem;
+      border-bottom: 1px solid var(--line);
+      padding-bottom: 1rem;
+    }
+
+    h2 {
+      margin: 0;
+      font-size: clamp(2rem, 6vw, 5rem);
+      line-height: .82;
+      letter-spacing: -.08em;
+      text-transform: uppercase;
+    }
+
+    .section-note { color: var(--muted); max-width: 430px; line-height: 1.5; }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 1rem;
+    }
+
+    .product-card {
+      border: 1px solid var(--line);
+      background: rgba(17,17,17,.88);
+      min-height: 100%;
+      position: relative;
+      overflow: hidden;
+      box-shadow: var(--shadow);
+    }
+
+    .product-card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(255,255,255,.08), transparent 32%, rgba(155,17,30,.08));
+      pointer-events: none;
+    }
+
+    .product-image {
+      height: 300px;
+      border-bottom: 1px solid var(--line);
+      display: grid;
+      place-items: center;
+      background:
+        linear-gradient(45deg, transparent 47%, rgba(242,234,215,.1) 48% 52%, transparent 53%) 0 0 / 28px 28px,
+        linear-gradient(-45deg, transparent 47%, rgba(242,234,215,.1) 48% 52%, transparent 53%) 0 0 / 28px 28px,
+        #0b0b0b;
+      position: relative;
+    }
+
+    .product-image .mock {
+      width: 62%;
+      aspect-ratio: .78;
+      background: #080808;
+      border: 1px solid rgba(242,234,215,.22);
+      display: grid;
+      place-items: center;
+      text-align: center;
+      text-transform: uppercase;
+      font-weight: 1000;
+      letter-spacing: -.08em;
+      font-size: 2.2rem;
+      padding: 1rem;
+      box-shadow: 14px 14px 0 rgba(155,17,30,.55);
+      transform: rotate(-2deg);
+    }
+
+    .product-info { padding: 1rem; position: relative; }
+
+    .product-title {
+      display: flex;
+      justify-content: space-between;
+      gap: .75rem;
+      margin-bottom: .35rem;
+    }
+
+    .product-title h3 {
+      margin: 0;
+      text-transform: uppercase;
+      letter-spacing: -.04em;
+      font-size: 1.2rem;
+    }
+
+    .price { color: var(--bone); font-weight: 950; white-space: nowrap; }
+    .desc { color: var(--muted); font-size: .9rem; line-height: 1.45; min-height: 3.9em; }
+
+    .size-row { display: flex; gap: .4rem; flex-wrap: wrap; margin: 1rem 0; }
+
+    .size-option {
+      border: 1px solid var(--line);
+      color: var(--bone);
+      background: transparent;
+      padding: .45rem .62rem;
+      cursor: pointer;
+      min-width: 42px;
+    }
+
+    .size-option.selected { border-color: var(--blood); background: var(--blood); }
+    .size-option:disabled { opacity: .25; cursor: not-allowed; text-decoration: line-through; }
+
+    .stock-line { color: var(--muted); font-size: .82rem; min-height: 1rem; }
+
+    .add-btn {
+      width: 100%;
+      margin-top: 1rem;
+      background: var(--bone);
+      color: var(--black);
+      border: 0;
+      padding: .9rem;
+      text-transform: uppercase;
+      font-weight: 950;
+      cursor: pointer;
+    }
+
+    .add-btn:disabled { opacity: .35; cursor: not-allowed; }
+
+    .info-panels {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+    }
+
+    .panel {
+      border: 1px solid var(--line);
+      background: rgba(17,17,17,.72);
+      padding: 1.25rem;
+    }
+
+    .panel h3 { margin: 0 0 .5rem; text-transform: uppercase; }
+    .panel p { color: var(--muted); line-height: 1.55; margin: 0; }
+
+    .cart-drawer {
+      position: fixed;
+      z-index: 30;
+      inset: 0 0 0 auto;
+      width: min(460px, 100vw);
+      background: #090909;
+      border-left: 1px solid var(--line);
+      transform: translateX(105%);
+      transition: transform .2s ease;
+      box-shadow: var(--shadow);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .cart-drawer.open { transform: translateX(0); }
+
+    .cart-head, .cart-foot {
+      padding: 1rem;
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .cart-foot {
+      border-top: 1px solid var(--line);
+      border-bottom: 0;
+      display: block;
+    }
+
+    .cart-items { padding: 1rem; overflow: auto; flex: 1; }
+    .cart-item { border-bottom: 1px solid var(--line); padding: .9rem 0; }
+    .cart-item strong { display: block; text-transform: uppercase; }
+    .cart-item span { color: var(--muted); font-size: .9rem; }
+
+    .cart-actions { display: flex; gap: .5rem; margin-top: .6rem; }
+    .small-btn { border: 1px solid var(--line); color: var(--bone); background: transparent; padding: .35rem .55rem; cursor: pointer; }
+
+    .total-line {
+      display: flex;
+      justify-content: space-between;
+      font-weight: 950;
+      font-size: 1.2rem;
+      margin-bottom: 1rem;
+    }
+
+    .checkout-form { display: grid; gap: .65rem; }
+    .checkout-form input, .checkout-form textarea, .checkout-form select {
+      width: 100%;
+      background: #050505;
+      color: var(--bone);
+      border: 1px solid var(--line);
+      padding: .8rem;
+    }
+
+    .checkout-note {
+      color: var(--muted);
+      font-size: .8rem;
+      line-height: 1.4;
+      margin-top: .75rem;
+    }
+
+    .close-btn {
+      border: 0;
+      background: transparent;
+      color: var(--bone);
+      font-size: 1.6rem;
+      cursor: pointer;
+    }
+
+    footer {
+      padding: 2rem clamp(1rem, 4vw, 4rem);
+      color: var(--muted);
+      border-top: 1px solid var(--line);
+      display: flex;
+      justify-content: space-between;
+      gap: 1rem;
+      flex-wrap: wrap;
+      text-transform: uppercase;
+      font-size: .78rem;
+      letter-spacing: .1em;
+    }
+
+    @media (max-width: 1100px) {
+      .grid { grid-template-columns: repeat(2, 1fr); }
+      .hero { grid-template-columns: 1fr; }
+      .badge-stack { grid-template-columns: repeat(3, 1fr); }
+      .band-photo-wrap {
+        width: min(420px, 100%);
+        transform: none;
+      }
+    }
+
+    @media (max-width: 700px) {
+      .nav a { display: none; }
+      .grid, .info-panels, .badge-stack { grid-template-columns: 1fr; }
+      .product-image { height: 240px; }
+      .section-head { display: block; }
+      .hero-logo { width: min(620px, 100%); margin-left: 0; }
+      .media-collage {
+        max-width: 100%;
+        }
+
+        .media-strip {
+        transform: none;
+        }
+    }
+  </style>
+</head>
+<body>
+  <header class="top-bar">
+    <a class="brand" href="#top" aria-label="No Closure home">
+    <img class="brand-logo" src="MONOGRAM.png" alt="No Closure monogram" />
+    </a>
+    <nav class="nav">
+      <a href="#shop">Shop</a>
+      <a href="#shipping">Shipping</a>
+      <a href="https://instagram.com/" target="_blank" rel="noreferrer">Instagram</a>
+      <button class="cart-button" id="openCart">Cart <span id="cartCount">0</span></button>
+    </nav>
+  </header>
+
+  <main id="top">
+    <section class="hero">
+      <div class="hero-inner">
+        <div class="kicker">South African Hardcore</div>
+        <img class="hero-logo" src="White logo.png" alt="No Closure logo" />
+        <div class="hero-actions">
+          <a class="btn primary" href="#shop">Shop the drop</a>
+          <a class="btn" href="#shipping">Shipping info</a>
+        </div>
+      </div>
+
+    </section>
+
+    <div class="marquee" aria-hidden="true"><div>NO CLOSURE · 012 · HXC · MERCH · SOUTH AFRICA · NO CLOSURE · 012 · HXC · MERCH · SOUTH AFRICA · NO CLOSURE · 012 · HXC · MERCH · SOUTH AFRICA · NO CLOSURE · 012 · HXC · MERCH · SOUTH AFRICA · </div></div>
+
+    <section id="shop">
+      <div class="section-head">
+        <h2>Current Drop</h2>
+      </div>
+      <div class="grid" id="productGrid"></div>
+    </section>
+
+    <section id="shipping">
+      <div class="section-head">
+        <h2>Shipping</h2>
+      </div>
+      <div class="info-panels">
+        <article class="panel">
+          <h3>South Africa</h3>
+          <p>Flat courier fee placeholder: R100. Swap this for Courier Guy, PUDO, BobGo, or manual quoting when ready.</p>
+        </article>
+        <article class="panel">
+          <h3>International</h3>
+          <p>International buyers can place an enquiry. You reply with DHL/Aramex quote before payment or send a custom payment link.</p>
+        </article>
+        <article class="panel">
+          <h3>Stock</h3>
+          <p>Sizes are stock-aware. Sold-out sizes are disabled. Next step: pull this data from Google Sheets.</p>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <aside class="cart-drawer" id="cartDrawer" aria-label="Shopping cart">
+    <div class="cart-head">
+      <strong>Order List</strong>
+      <button class="close-btn" id="closeCart" aria-label="Close cart">×</button>
+    </div>
+    <div class="cart-items" id="cartItems"></div>
+    <div class="cart-foot">
+      <div class="total-line"><span>Total</span><span id="cartTotal">R0</span></div>
+      <form class="checkout-form" id="checkoutForm">
+        <input required name="name" placeholder="Full name" />
+        <input required name="email" type="email" placeholder="Email" />
+        <input required name="phone" placeholder="Phone / WhatsApp" />
+        <select required name="region">
+          <option value="South Africa">South Africa</option>
+          <option value="International">International quote needed</option>
+        </select>
+        <textarea required name="address" rows="3" placeholder="Delivery address"></textarea>
+        <button class="add-btn" type="submit">Create order enquiry</button>
+      </form>
+      <p class="checkout-note">This demo creates an email order enquiry. Later: replace this with PayFast payment links or a Google Apps Script endpoint.</p>
+    </div>
+  </aside>
+
+  <footer>
+    <span>© <span id="year"></span> No Closure</span>
+    <span>DIY Hardcore · South Africa</span>
+  </footer>
+
+  <script>
+    const products = [
+      {
+        id: "wire-tee",
+        name: "Barbed Wire Tee",
+        price: 300,
+        description: "Black heavyweight tee with front chest hit and oversized back print.",
+        print: "BARBED\nWIRE",
+        sizes: { S: 2, M: 6, L: 4, XL: 1, XXL: 0 }
+      },
+      {
+        id: "fence-hoodie",
+        name: "Chainlink Hoodie",
+        price: 650,
+        description: "Heavy black hoodie. Fence texture, blood-red No Closure mark.",
+        print: "NO\nCLOSURE",
+        sizes: { S: 0, M: 2, L: 3, XL: 2, XXL: 1 }
+      },
+      {
+        id: "flash-cap",
+        name: "Tattoo Flash Cap",
+        price: 280,
+        description: "Low-profile cap with embroidered flash-inspired NC mark.",
+        print: "NC",
+        sizes: { OS: 7 }
+      },
+      {
+        id: "sticker-pack",
+        name: "Sticker Pack",
+        price: 80,
+        description: "Five-piece sticker pack: wire, blade, rose, fence, and logo marks.",
+        print: "STICKER\nPACK",
+        sizes: { OS: 20 }
+      }
+    ];
+
+    let selectedSizes = {};
+    let cart = [];
+
+    const productGrid = document.getElementById("productGrid");
+    const cartDrawer = document.getElementById("cartDrawer");
+    const cartItems = document.getElementById("cartItems");
+    const cartCount = document.getElementById("cartCount");
+    const cartTotal = document.getElementById("cartTotal");
+
+    document.getElementById("year").textContent = new Date().getFullYear();
+    document.getElementById("openCart").addEventListener("click", () => cartDrawer.classList.add("open"));
+    document.getElementById("closeCart").addEventListener("click", () => cartDrawer.classList.remove("open"));
+
+    function formatRand(amount) {
+      return `R${amount.toLocaleString("en-ZA")}`;
+    }
+
+    function renderProducts() {
+      productGrid.innerHTML = products.map(product => {
+        const sizes = Object.entries(product.sizes).map(([size, stock]) => {
+          const disabled = stock <= 0 ? "disabled" : "";
+          const selected = selectedSizes[product.id] === size ? "selected" : "";
+          return `<button class="size-option ${selected}" ${disabled} data-product="${product.id}" data-size="${size}">${size}</button>`;
+        }).join("");
+
+        const selectedSize = selectedSizes[product.id];
+        const selectedStock = selectedSize ? product.sizes[selectedSize] : null;
+        const stockLine = selectedSize ? `${selectedStock} left in ${selectedSize}` : "Choose a size";
+        const canAdd = selectedSize && selectedStock > 0;
+
+        return `
+          <article class="product-card">
+            <div class="product-image">
+              <div class="mock">${product.print.replace(/\n/g, "<br>")}</div>
+            </div>
+            <div class="product-info">
+              <div class="product-title">
+                <h3>${product.name}</h3>
+                <span class="price">${formatRand(product.price)}</span>
+              </div>
+              <p class="desc">${product.description}</p>
+              <div class="size-row">${sizes}</div>
+              <div class="stock-line">${stockLine}</div>
+              <button class="add-btn" ${canAdd ? "" : "disabled"} data-add="${product.id}">Add to cart</button>
+            </div>
+          </article>
+        `;
+      }).join("");
+
+      document.querySelectorAll(".size-option").forEach(button => {
+        button.addEventListener("click", () => {
+          selectedSizes[button.dataset.product] = button.dataset.size;
+          renderProducts();
+        });
+      });
+
+      document.querySelectorAll("[data-add]").forEach(button => {
+        button.addEventListener("click", () => addToCart(button.dataset.add));
+      });
+    }
+
+    function addToCart(productId) {
+      const product = products.find(item => item.id === productId);
+      const size = selectedSizes[productId];
+      const stock = product.sizes[size];
+      const existingQty = cart.filter(item => item.id === productId && item.size === size).reduce((sum, item) => sum + item.qty, 0);
+
+      if (!size || existingQty >= stock) return;
+
+      const existing = cart.find(item => item.id === productId && item.size === size);
+      if (existing) existing.qty += 1;
+      else cart.push({ id: product.id, name: product.name, price: product.price, size, qty: 1 });
+
+      renderCart();
+      cartDrawer.classList.add("open");
+    }
+
+    function changeQty(index, amount) {
+      const item = cart[index];
+      const product = products.find(product => product.id === item.id);
+      const maxStock = product.sizes[item.size];
+      item.qty += amount;
+
+      if (item.qty <= 0) cart.splice(index, 1);
+      if (item && item.qty > maxStock) item.qty = maxStock;
+
+      renderCart();
+    }
+
+    function renderCart() {
+      if (!cart.length) {
+        cartItems.innerHTML = `<p class="section-note">Your cart is empty. Pick something from the drop.</p>`;
+      } else {
+        cartItems.innerHTML = cart.map((item, index) => `
+          <div class="cart-item">
+            <strong>${item.name}</strong>
+            <span>Size ${item.size} · ${formatRand(item.price)} · Qty ${item.qty}</span>
+            <div class="cart-actions">
+              <button class="small-btn" onclick="changeQty(${index}, -1)">-</button>
+              <button class="small-btn" onclick="changeQty(${index}, 1)">+</button>
+            </div>
+          </div>
+        `).join("");
+      }
+
+      const count = cart.reduce((sum, item) => sum + item.qty, 0);
+      const total = cart.reduce((sum, item) => sum + item.price * item.qty, 0);
+      cartCount.textContent = count;
+      cartTotal.textContent = formatRand(total);
+    }
+
+    document.getElementById("checkoutForm").addEventListener("submit", event => {
+      event.preventDefault();
+      if (!cart.length) return alert("Your cart is empty.");
+
+      const form = new FormData(event.target);
+      const orderLines = cart.map(item => `${item.qty} x ${item.name} / ${item.size} - ${formatRand(item.price * item.qty)}`).join("%0D%0A");
+      const total = cart.reduce((sum, item) => sum + item.price * item.qty, 0);
+      const body = [
+        "New No Closure merch order enquiry:",
+        "",
+        `Name: ${form.get("name")}`,
+        `Email: ${form.get("email")}`,
+        `Phone: ${form.get("phone")}`,
+        `Region: ${form.get("region")}`,
+        `Address: ${form.get("address")}`,
+        "",
+        "Items:",
+        decodeURIComponent(orderLines),
+        "",
+        `Total excluding courier/final quote: ${formatRand(total)}`
+      ].join("%0D%0A");
+
+      window.location.href = `mailto:orders@noclosure.co.za?subject=No Closure Merch Order&body=${body}`;
+    });
+
+    renderProducts();
+    renderCart();
+  </script>
+</body>
+</html>
