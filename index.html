@@ -694,18 +694,18 @@
     }
 
     .video-panel {
-  position: relative;
-  display: block;
-  min-height: 420px;
-  border: 1px solid var(--line);
-  overflow: hidden;
-  background:
-    linear-gradient(rgba(0,0,0,.25), rgba(0,0,0,.72)),
-    url('video-thumb.jpg');
-  background-size: cover;
-  background-position: center;
-  box-shadow: var(--shadow);
-}
+      position: relative;
+      display: block;
+      min-height: 420px;
+      border: 1px solid var(--line);
+      overflow: hidden;
+      background:
+        linear-gradient(rgba(0,0,0,.25), rgba(0,0,0,.72)),
+        url('video-thumb.jpg');
+      background-size: cover;
+      background-position: center;
+      box-shadow: var(--shadow);
+    }
 
 .video-panel::before {
   content: "";
@@ -716,6 +716,11 @@
   background-size: 520px;
   opacity: .12;
   mix-blend-mode: screen;
+}
+
+.video-panel:hover {
+  transform: translate(-4px, -4px);
+  box-shadow: 6px 6px 0 #8b0000;
 }
 
 .video-panel::after {
@@ -770,6 +775,77 @@
   line-height: 1.5;
 }
 
+.stream-links {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.stream-card {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  background:
+    linear-gradient(rgba(0,0,0,.72), rgba(0,0,0,.88)),
+    #111;
+  padding: 1.4rem;
+  min-height: 140px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  transition: .14s ease;
+  box-shadow: var(--shadow);
+}
+
+.stream-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    url('65728a48069a0bb75aae0b2cb2ece7f0 (1).jpg');
+  background-size: 420px;
+  opacity: .08;
+  mix-blend-mode: screen;
+}
+
+.stream-card:hover {
+  transform: translate(-4px, -4px);
+}
+
+.stream-card.spotify:hover {
+  box-shadow: 6px 6px 0 #1db954;
+}
+
+.stream-card.apple:hover {
+  box-shadow: 6px 6px 0 var(--blood);
+}
+
+.stream-label {
+  position: relative;
+  z-index: 1;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: .16em;
+  font-size: .7rem;
+  margin-bottom: .5rem;
+}
+
+.stream-card strong {
+  position: relative;
+  z-index: 1;
+  font-size: clamp(1.8rem, 5vw, 3rem);
+  line-height: .9;
+  letter-spacing: -.08em;
+  text-transform: uppercase;
+}
+
+@media (max-width: 700px) {
+  .stream-links {
+    grid-template-columns: 1fr;
+  }
+}
+
 
   </style>
 </head>
@@ -782,6 +858,7 @@
       <a href="#shop">Shop</a>
       <a href="#shipping">Shipping</a>
       <a href="https://instagram.com/" target="_blank" rel="noreferrer">Instagram</a>
+      <a href="#music">Music</a>
       <button class="cart-button" id="openCart">Cart <span id="cartCount">0</span></button>
     </nav>
   </header>
@@ -853,6 +930,27 @@
           </p>
         </div>
       </a>
+      <div class="stream-links">
+      <a 
+        class="stream-card spotify"
+        href="https://open.spotify.com/artist/3PySwRk0wSsfgo6qKE0g06"
+        target="_blank"
+        rel="noreferrer"
+      >
+        <span class="stream-label">Listen on</span>
+        <strong>Spotify</strong>
+      </a>
+
+      <a 
+        class="stream-card apple"
+        href="https://music.apple.com/us/artist/no-closure/1758553118"
+        target="_blank"
+        rel="noreferrer"
+      >
+        <span class="stream-label">Listen on</span>
+        <strong>Apple Music</strong>
+      </a>
+    </div>
     </section>
 
 
