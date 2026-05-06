@@ -581,6 +581,80 @@
       }
     }
 
+    .order-success {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,.82);
+      backdrop-filter: blur(10px);
+      display: grid;
+      place-items: center;
+      z-index: 100;
+      opacity: 0;
+      pointer-events: none;
+      transition: .2s ease;
+    }
+
+    .order-success.show {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .order-success-box {
+      width: min(92vw, 520px);
+      border: 1px solid var(--line);
+      background:
+        linear-gradient(rgba(0,0,0,.72), rgba(0,0,0,.92)),
+        url('bdf966d5b573ab06eb242cbad2b09301.jpg');
+      background-size: 320px;
+      padding: 2rem;
+      box-shadow: var(--shadow);
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .order-success-box::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        url('65728a48069a0bb75aae0b2cb2ece7f0 (1).jpg');
+      background-size: 420px;
+      opacity: .08;
+      mix-blend-mode: screen;
+    }
+
+    .success-kicker {
+      color: var(--blood);
+      text-transform: uppercase;
+      letter-spacing: .18em;
+      font-size: .7rem;
+      font-weight: 900;
+    }
+
+    .order-success h3 {
+      margin: .5rem 0 1rem;
+      font-size: clamp(2.4rem, 8vw, 4rem);
+      line-height: .9;
+      letter-spacing: -.08em;
+    }
+
+    .order-success p {
+      color: var(--ash);
+      line-height: 1.6;
+    }
+
+    .order-success button {
+      margin-top: 1.5rem;
+      border: 1px solid var(--blood);
+      background: var(--blood);
+      color: var(--black);
+      padding: .9rem 1.2rem;
+      font-weight: 950;
+      text-transform: uppercase;
+      cursor: pointer;
+    }
+
     @media (max-width: 700px) {
       .nav a { display: none; }
       .grid, .info-panels, .badge-stack { grid-template-columns: 1fr; }
@@ -676,16 +750,27 @@
     </div>
   </aside>
 
+  <div class="order-success" id="orderSuccess">
+    <div class="order-success-box">
+      <span class="success-kicker">ORDER RECEIVED</span>
+      <h3>THANK YOU</h3>
+      <p>
+        Your order enquiry has been received.
+        We’ll contact you shortly with payment and shipping details.
+      </p>
+    </div>
+  </div>
+
   <footer>
     <span>© <span id="year"></span> No Closure</span>
     <span>DIY Hardcore · South Africa</span>
   </footer>
 
-  <script>
+<script>
 
-const SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRhyWAC9kNLyq9MuEO7neThaBVdHY7pZY_2ZUSnUgqw5mCtmExvJmwNNW4UyPpyqJBgbfW4VL-sXUoS/pub?output=csv";
-
-let products = [];
+  const SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRhyWAC9kNLyq9MuEO7neThaBVdHY7pZY_2ZUSnUgqw5mCtmExvJmwNNW4UyPpyqJBgbfW4VL-sXUoS/pub?output=csv";
+  const ORDER_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyUbw2gVRgTcRcDo34q9H14MqPLtlhBxwHCSWVldIP6ybfuV-mwucW6GSSPtG_x3EfM/exec";
+  let products = [];
 
 function parseCSV(text) {
   const rows = text.trim().split(/\r?\n/);
@@ -843,30 +928,56 @@ console.log(products);
       cartTotal.textContent = formatRand(total);
     }
 
-    document.getElementById("checkoutForm").addEventListener("submit", event => {
+    document.getElementById("checkoutForm").addEventListener("submit", async event => {
       event.preventDefault();
-      if (!cart.length) return alert("Your cart is empty.");
+
+      if (!cart.length) {
+        alert("Your cart is empty.");
+        return;
+      }
 
       const form = new FormData(event.target);
-      const orderLines = cart.map(item => `${item.qty} x ${item.name} / ${item.size} - ${formatRand(item.price * item.qty)}`).join("%0D%0A");
-      const total = cart.reduce((sum, item) => sum + item.price * item.qty, 0);
-      const body = [
-        "New No Closure merch order enquiry:",
-        "",
-        `Name: ${form.get("name")}`,
-        `Email: ${form.get("email")}`,
-        `Phone: ${form.get("phone")}`,
-        `Region: ${form.get("region")}`,
-        `Address: ${form.get("address")}`,
-        "",
-        "Items:",
-        decodeURIComponent(orderLines),
-        "",
-        `Total excluding courier/final quote: ${formatRand(total)}`
-      ].join("%0D%0A");
 
-      window.location.href = `mailto:orders@noclosure.co.za?subject=No Closure Merch Order&body=${body}`;
+      const order = {
+        name: form.get("name"),
+        email: form.get("email"),
+        phone: form.get("phone"),
+        region: form.get("region"),
+        address: form.get("address"),
+        items: cart,
+        total: cart.reduce((sum, item) => sum + item.price * item.qty, 0)
+      };
+
+      try {
+        await fetch(ORDER_SCRIPT_URL, {
+          method: "POST",
+          mode: "no-cors",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify(order)
+        });
+
+        orderSuccess.classList.add("show");
+
+        cart = [];
+        renderCart();
+        event.target.reset();
+        cartDrawer.classList.remove("open");
+
+      } catch (error) {
+        alert("Something went wrong. Please DM us on Instagram to place your order.");
+        console.error(error);
+      }
     });
+
+  const orderSuccess = document.getElementById("orderSuccess");
+
+  orderSuccess.addEventListener("click", (e) => {
+    if (e.target === orderSuccess) {
+      orderSuccess.classList.remove("show");
+    }
+  });
 
   loadProducts();
   renderCart();
