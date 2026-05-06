@@ -669,6 +669,29 @@
         transform: none;
         }
     }
+
+    .add-btn.loading {
+      opacity: .75;
+      cursor: wait;
+      position: relative;
+    }
+
+    .add-btn.loading::after {
+      content: "";
+      display: inline-block;
+      width: 14px;
+      height: 14px;
+      margin-left: 10px;
+      border: 2px solid var(--black);
+      border-top-color: transparent;
+      border-radius: 50%;
+      animation: spin .7s linear infinite;
+      vertical-align: -2px;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
   </style>
 </head>
 <body>
@@ -938,6 +961,11 @@ console.log(products);
 
       const form = new FormData(event.target);
 
+      const submitButton = event.target.querySelector("button[type='submit']");
+      submitButton.disabled = true;
+      submitButton.classList.add("loading");
+      submitButton.textContent = "Sending order";
+
       const order = {
         name: form.get("name"),
         email: form.get("email"),
@@ -958,6 +986,10 @@ console.log(products);
           body: JSON.stringify(order)
         });
 
+        submitButton.disabled = false;
+        submitButton.classList.remove("loading");
+        submitButton.textContent = "Create order enquiry";
+
         orderSuccess.classList.add("show");
 
         cart = [];
@@ -968,6 +1000,9 @@ console.log(products);
       } catch (error) {
         alert("Something went wrong. Please DM us on Instagram to place your order.");
         console.error(error);
+        submitButton.disabled = false;
+        submitButton.classList.remove("loading");
+        submitButton.textContent = "Create order enquiry";
       }
     });
 
