@@ -551,6 +551,13 @@
       cursor: pointer;
     }
 
+    .product-photo {
+      width: 80%;
+      height: 80%;
+      object-fit: contain;
+      display: block;
+    }
+
     footer {
       padding: 2rem clamp(1rem, 4vw, 4rem);
       color: var(--muted);
@@ -675,40 +682,55 @@
   </footer>
 
   <script>
-    const products = [
-      {
-        id: "wire-tee",
-        name: "Barbed Wire Tee",
-        price: 300,
-        description: "Black heavyweight tee with front chest hit and oversized back print.",
-        print: "BARBED\nWIRE",
-        sizes: { S: 2, M: 6, L: 4, XL: 1, XXL: 0 }
-      },
-      {
-        id: "fence-hoodie",
-        name: "Chainlink Hoodie",
-        price: 650,
-        description: "Heavy black hoodie. Fence texture, blood-red No Closure mark.",
-        print: "NO\nCLOSURE",
-        sizes: { S: 0, M: 2, L: 3, XL: 2, XXL: 1 }
-      },
-      {
-        id: "flash-cap",
-        name: "Tattoo Flash Cap",
-        price: 280,
-        description: "Low-profile cap with embroidered flash-inspired NC mark.",
-        print: "NC",
-        sizes: { OS: 7 }
-      },
-      {
-        id: "sticker-pack",
-        name: "Sticker Pack",
-        price: 80,
-        description: "Five-piece sticker pack: wire, blade, rose, fence, and logo marks.",
-        print: "STICKER\nPACK",
-        sizes: { OS: 20 }
+
+const SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRhyWAC9kNLyq9MuEO7neThaBVdHY7pZY_2ZUSnUgqw5mCtmExvJmwNNW4UyPpyqJBgbfW4VL-sXUoS/pub?output=csv";
+
+let products = [];
+
+function parseCSV(text) {
+  const rows = text.trim().split(/\r?\n/);
+  const headers = rows.shift().split(",").map(h => h.trim());
+
+  return rows.map(row => {
+    const values = row.split(",").map(v => v.trim());
+    const item = {};
+
+    headers.forEach((header, index) => {
+      item[header] = values[index] || "";
+    });
+
+    return item;
+  });
+}
+
+async function loadProducts() {
+  const response = await fetch(SHEET_CSV_URL);
+  const csvText = await response.text();
+
+  products = parseCSV(csvText)
+    .filter(item => item.active.toUpperCase() === "TRUE")
+    .map(item => ({
+      id: item.id,
+      name: item.name,
+      price: Number(item.price),
+      description: item.description,
+      image: item.image,
+      print: item.name,
+      sizes: {
+        S: parseInt((item.S || item.s || "0").trim()),
+        M: parseInt((item.M || item.m || "0").trim()),
+        L: parseInt((item.L || item.l || "0").trim()),
+        XL: parseInt((item.XL || item.xl || "0").trim()),
+        XXL: parseInt((item.XXL || item.xxl || "0").trim()),
+        OS: parseInt((item.OS || item.os || "0").trim())
       }
-    ];
+    }));
+
+    console.log(csvText);
+console.log(products);
+
+  renderProducts();
+}
 
     let selectedSizes = {};
     let cart = [];
@@ -743,7 +765,7 @@
         return `
           <article class="product-card">
             <div class="product-image">
-              <div class="mock">${product.print.replace(/\n/g, "<br>")}</div>
+              <img class="product-photo" src="${product.image}" alt="${product.name}" />
             </div>
             <div class="product-info">
               <div class="product-title">
@@ -846,8 +868,8 @@
       window.location.href = `mailto:orders@noclosure.co.za?subject=No Closure Merch Order&body=${body}`;
     });
 
-    renderProducts();
-    renderCart();
+  loadProducts();
+  renderCart();
   </script>
 </body>
 </html>
