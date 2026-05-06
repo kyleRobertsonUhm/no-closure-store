@@ -692,6 +692,85 @@
     @keyframes spin {
       to { transform: rotate(360deg); }
     }
+
+    .video-panel {
+  position: relative;
+  display: block;
+  min-height: 420px;
+  border: 1px solid var(--line);
+  overflow: hidden;
+  background:
+    linear-gradient(rgba(0,0,0,.25), rgba(0,0,0,.72)),
+    url('video-thumb.jpg');
+  background-size: cover;
+  background-position: center;
+  box-shadow: var(--shadow);
+}
+
+.video-panel::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    url('65728a48069a0bb75aae0b2cb2ece7f0 (1).jpg');
+  background-size: 520px;
+  opacity: .12;
+  mix-blend-mode: screen;
+}
+
+.video-panel::after {
+  content: "▶";
+  position: absolute;
+  inset: 50% auto auto 50%;
+  transform: translate(-50%, -50%);
+  width: 110px;
+  height: 110px;
+  border: 2px solid rgba(255,212,0,.85);
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font-size: 2.5rem;
+  color: var(--blood);
+  background: rgba(0,0,0,.45);
+  backdrop-filter: blur(4px);
+}
+
+.video-overlay {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 2rem;
+  background: linear-gradient(to top, rgba(0,0,0,.92), transparent);
+  z-index: 1;
+}
+
+.video-kicker {
+  display: block;
+  color: var(--blood);
+  text-transform: uppercase;
+  letter-spacing: .18em;
+  font-size: .72rem;
+  font-weight: 900;
+  margin-bottom: .7rem;
+}
+
+.video-overlay h3 {
+  margin: 0;
+  font-size: clamp(2rem, 6vw, 5rem);
+  line-height: .9;
+  letter-spacing: -.08em;
+  text-transform: uppercase;
+}
+
+.video-overlay p {
+  color: var(--ash);
+  max-width: 520px;
+  margin-top: .8rem;
+  line-height: 1.5;
+}
+
+
   </style>
 </head>
 <body>
@@ -736,18 +815,47 @@
       <div class="info-panels">
         <article class="panel">
           <h3>South Africa</h3>
-          <p>Flat courier fee placeholder: R100. Swap this for Courier Guy, PUDO, BobGo, or manual quoting when ready.</p>
+          <p>
+            PUDO locker delivery is currently the recommended and most affordable shipping option for South African orders. 
+            Alternative couriers such as The Courier Guy or door-to-door delivery may be used at our discretion depending on location, parcel size, or customer preference.
+          </p>
         </article>
         <article class="panel">
           <h3>International</h3>
-          <p>International buyers can place an enquiry. You reply with DHL/Aramex quote before payment or send a custom payment link.</p>
+          <p>
+            International orders are welcome. Please place an enquiry and we’ll get in touch with shipping options, courier quotes, and payment details as soon as possible.
+          </p>
         </article>
         <article class="panel">
           <h3>Stock</h3>
-          <p>Sizes are stock-aware. Sold-out sizes are disabled. Next step: pull this data from Google Sheets.</p>
+          <p>
+          Product availability is stock-aware and updated regularly. Sold-out sizes are automatically disabled once inventory runs out.
+        </p>
         </article>
       </div>
     </section>
+    <section id="music">
+      <div class="section-head">
+        <h2>Latest</h2>
+      </div>
+
+      <a 
+        class="video-panel"
+        href="https://youtu.be/9w8YWBfZpnc?si=n_So8tO8hx4rfQhj"
+        target="_blank"
+        rel="noreferrer"
+      >
+        <div class="video-overlay">
+          <span class="video-kicker">NO CLOSURE</span>
+          <h3>WATCH THE VIDEO</h3>
+          <p>
+            Forgetting is a Kindness Too.
+          </p>
+        </div>
+      </a>
+    </section>
+
+
   </main>
 
   <aside class="cart-drawer" id="cartDrawer" aria-label="Shopping cart">
@@ -769,7 +877,6 @@
         <textarea required name="address" rows="3" placeholder="Delivery address"></textarea>
         <button class="add-btn" type="submit">Create order enquiry</button>
       </form>
-      <p class="checkout-note">This demo creates an email order enquiry. Later: replace this with PayFast payment links or a Google Apps Script endpoint.</p>
     </div>
   </aside>
 
